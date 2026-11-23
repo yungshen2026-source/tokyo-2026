@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>2026 夏日東京・六天五夜多人即時旅遊日誌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-washi: #FAF6F0;
+      --card-bg: #FFFFFF;
+      --indigo: #1E3A5F;
+      --indigo-light: #2D5488;
+      --vermilion: #D94E34;
+      --gold: #C89D54;
+      --matcha: #5B7A53;
+      --text-main: #2C2C2C;
+      --text-muted: #6E6A63;
+      --border-soft: #E6DFD3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: var(--bg-washi);
+      background-image: radial-gradient(#E5DEC9 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: var(--text-main);
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--indigo) 0%, #132640 100%);
+      color: #FFF;
+      padding: 28px 20px 24px;
+      text-align: center;
+      position: relative;
+      border-bottom: 4px solid var(--gold);
+      box-shadow: 0 4px 15px rgba(30, 58, 95, 0.2);
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid var(--gold);
+      color: #FFE8B3;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    header h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.65rem;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: #D0DCEB;
+    }
+
+    .sync-status {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ADE80;
+      box-shadow: 0 0 6px #4ADE80;
+    }
+
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      background: #FFF;
+      border-bottom: 1px solid var(--border-soft);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 8px 10px;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-washi);
+      color: var(--indigo);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--indigo);
+      color: #FFF;
+      border-color: var(--indigo);
+      box-shadow: 0 2px 6px rgba(30, 58, 95, 0.25);
+    }
+
+    .tab-btn.expense-tab {
+      border-color: var(--vermilion);
+      color: var(--vermilion);
+    }
+    .tab-btn.expense-tab.active {
+      background: var(--vermilion);
+      color: #FFF;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 18px 16px;
+    }
+
+    .day-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .day-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .day-header-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .day-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .day-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.25rem;
+      color: var(--indigo);
+    }
+
+    .hotel-tag {
+      background: #F3EFE6;
+      color: #7A5C29;
+      font-size: 0.82rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar-wrap {
+      background: #EDE8DF;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--gold), var(--vermilion));
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .item-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-soft);
+      position: relative;
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+
+    .item-card.checked {
+      background: #F9F7F3;
+      border-color: #DCD4C6;
+    }
+
+    .item-card.checked .item-content {
+      opacity: 0.65;
+    }
+
+    .stamp-badge {
+      position: absolute;
+      right: 16px;
+      top: 14px;
+      border: 3px solid var(--vermilion);
+      color: var(--vermilion);
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transform: rotate(-12deg) scale(1.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: rgba(255, 255, 255, 0.85);
+      z-index: 5;
+    }
+
+    .item-card.checked .stamp-badge {
+      opacity: 0.9;
+      transform: rotate(-12deg) scale(1);
+    }
+
+    .item-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .time-pill {
+      background: var(--indigo);
+      color: #FFF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .type-pill {
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+    .type-spot { background: #E6F0FA; color: #1E568F; }
+    .type-food { background: #FCECE8; color: #C23B22; }
+    .type-flight { background: #EAF3E8; color: #3D6B35; }
+
+    .item-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .item-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      text-decoration: none;
+      background: #F4F1EA;
+      color: var(--indigo);
+      border: 1px solid #D8D0C1;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-check {
+      background: #FFF;
+      color: var(--matcha);
+      border: 1.5px solid var(--matcha);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .item-card.checked .btn-check {
+      background: var(--matcha);
+      color: #FFF;
+    }
+
+    .album-box {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 20px;
+      border: 1.5px dashed var(--gold);
+    }
+
+    .album-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .album-header h3 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.05rem;
+      color: var(--indigo);
+    }
+
+    .upload-label {
+      background: var(--gold);
+      color: #FFF;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .photo-item {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      background: #F5F2EB;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .photo-del {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.6);
+      color: #FFF;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .expense-summary {
+      background: linear-gradient(135deg, var(--vermilion), #B83A24);
+      color: #FFF;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .expense-summary div span {
+      font-size: 0.82rem;
+      opacity: 0.9;
+    }
+
+    .expense-summary div strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-top: 4px;
+      font-family: 'Noto Serif TC', serif;
+    }
+
+    .expense-form {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .expense-form input, .expense-form select {
+      padding: 10px;
+      border: 1px solid #D5CEC2;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      width: 100%;
+    }
+
+    .expense-form button {
+      grid-column: span 2;
+      background: var(--indigo);
+      color: #FFF;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .expense-list {
+      list-style: none;
+    }
+
+    .expense-row {
+      background: #FFF;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .expense-info strong {
+      display: block;
+      font-size: 0.98rem;
+    }
+
+    .expense-info small {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .expense-amount {
+      text-align: right;
+    }
+
+    .expense-amount strong {
+      color: var(--vermilion);
+      font-size: 1.05rem;
+    }
+
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    #imgModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    #imgModal img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="fireworksCanvas"></canvas>
+  <div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src="" alt="放大回憶" /></div>
+
+  <header>
+    <div class="header-badge">🎐 2026.07.01 – 07.06 東京夏日行</div>
+    <h1>東京夏風・旅伴共筆手帖</h1>
+    <p>早去晚回六天五夜｜即時同步行程打卡・分帳・回憶相簿</p>
+    <div class="sync-status">
+      <span class="dot" id="syncDot"></span>
+      <span id="syncText">雲端即時連線中...</span>
+    </div>
+  </header>
+
+  <nav class="nav-tabs" id="navTabs">
+    <button class="tab-btn active" onclick="switchTab('day1', event)">7/1 (三) Day1</button>
+    <button class="tab-btn" onclick="switchTab('day2', event)">7/2 (四) Day2</button>
+    <button class="tab-btn" onclick="switchTab('day3', event)">7/3 (五) Day3</button>
+    <button class="tab-btn" onclick="switchTab('day4', event)">7/4 (六) Day4</button>
+    <button class="tab-btn" onclick="switchTab('day5', event)">7/5 (日) Day5</button>
+    <button class="tab-btn" onclick="switchTab('day6', event)">7/6 (一) Day6</button>
+    <button class="tab-btn expense-tab" onclick="switchTab('expense', event)">💴 即時記帳本</button>
+  </nav>
+
+  <main class="container" id="mainContainer">
+    <div id="daysWrapper"></div>
+
+    <section id="expense" class="day-section">
+      <div class="expense-summary">
+        <div>
+          <span>日幣總支出 (JPY)</span>
+          <strong id="totalJpy">¥0</strong>
+        </div>
+        <div>
+          <span>約合台幣 (匯率 0.215)</span>
+          <strong id="totalTwd">NT$0</strong>
+        </div>
+      </div>
+
+      <div class="expense-form">
+        <select id="expDay">
+          <option value="7/1 Day1">7/1 (Day 1)</option>
+          <option value="7/2 Day2">7/2 (Day 2)</option>
+          <option value="7/3 Day3">7/3 (Day 3)</option>
+          <option value="7/4 Day4">7/4 (Day 4)</option>
+          <option value="7/5 Day5">7/5 (Day 5)</option>
+          <option value="7/6 Day6">7/6 (Day 6)</option>
+        </select>
+        <input type="text" id="expPayer" placeholder="付款人 (例: 小明)" />
+        <input type="text" id="expTitle" placeholder="項目 (例: 一蘭拉麵、西瓜卡)" />
+        <input type="number" id="expAmount" placeholder="日幣金額 ¥" inputmode="numeric" />
+        <button onclick="addExpense()">➕ 新增共同支出（全員即時同步）</button>
+      </div>
+
+      <ul class="expense-list" id="expenseList"></ul>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcMy4hZ6lQMPaA0JouXMY657epyUh8K4Y",
+      authDomain: "trip-2026-bfd05.firebaseapp.com",
+      projectId: "trip-2026-bfd05",
+      storageBucket: "trip-2026-bfd05.firebasestorage.app",
+      messagingSenderId: "747440968608",
+      appId: "1:747440968608:web:603fd91d105db0e32ecac5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const itineraryData = [
+      {
+        id: "day1",
+        title: "7/1 (三) 抵達東京・淺草下町風情",
+        hotel: "上野/淺草精選飯店 (推薦: APA Hotel 淺草田原町站前)",
+        hotelMap: "APA Hotel Asakusa Tawaramachi Ekimae",
+        items: [
+          { id: "d1_1", time: "10:45", type: "flight", label: "航班抵達", title: "抵達東京成田/羽田機場", desc: "搭乘 Skyliner 或利木津巴士直奔市區寄放行李，開啟六天五夜之旅！", map: "Narita International Airport" },
+          { id: "d1_2", time: "13:00", type: "food", label: "午餐", title: "淺草今半 百年壽喜燒", desc: "午間套餐 CP 值超高，品嚐入口即化的黑毛和牛。", map: "Asakusa Imahan Kokusai Dori" },
+          { id: "d1_3", time: "14:30", type: "spot", label: "必逛景點", title: "淺草寺雷門 ＆ 仲見世通", desc: "求支七月夏籤、吃人形燒，散步至隅田川公園遠眺晴空塔。", map: "Senso-ji Temple" },
+          { id: "d1_4", time: "18:30", type: "food", label: "晚餐", title: "晴空塔 利久牛舌", desc: "厚切炭烤牛舌配麥飯，飯後上展望台欣賞東京百萬夜景。", map: "Tokyo Skytree" }
+        ]
+      },
+      {
+        id: "day2",
+        title: "7/2 (四) 明治神宮・原宿表參道潮流",
+        hotel: "上野/淺草精選飯店 (連住免換飯店)",
+        hotelMap: "APA Hotel Asakusa Tawaramachi Ekimae",
+        items: [
+          { id: "d2_1", time: "09:30", type: "spot", label: "必逛景點", title: "明治神宮 森林參道", desc: "在市中心巨木參道享受夏日清晨的涼爽芬多精。", map: "Meiji Jingu" },
+          { id: "d2_2", time: "12:00", type: "food", label: "午餐", title: "AFURI 阿夫利 柚子鹽拉麵", desc: "清爽柚子香氣湯頭搭配炙燒叉燒，最適合夏天的東京拉麵。", map: "AFURI Harajuku" },
+          { id: "d2_3", time: "14:00", type: "spot", label: "必逛景點", title: "表參道 ＆ 澀谷 SKY 展望台", desc: "逛街挖寶，傍晚預約 Shibuya SKY 俯瞰夕陽與十字路口。", map: "SHIBUYA SKY" },
+          { id: "d2_4", time: "19:30", type: "food", label: "晚餐", title: "澀谷 挽肉と米 / 迴轉壽司美登利", desc: "炭火現烤漢堡排配羽釜白飯，或高人氣新鮮握壽司。", map: "Hikiniku to Come Shibuya" }
+        ]
+      },
+      {
+        id: "day3",
+        title: "7/3 (五) 築地鮮味・銀座與東京鐵塔",
+        hotel: "上野/淺草精選飯店 (連住第三晚)",
+        hotelMap: "APA Hotel Asakusa Tawaramachi Ekimae",
+        items: [
+          { id: "d3_1", time: "09:00", type: "spot", label: "必逛景點", title: "築地場外市場 晨間巡禮", desc: "現煎玉子燒、海膽丼與抹茶拿鐵，感受東京廚房活力。", map: "Tsukiji Outer Market" },
+          { id: "d3_2", time: "12:30", type: "food", label: "午餐", title: "銀座 篝 (Kagari) 雞白湯拉麵", desc: "濃郁如法式濃湯的米其林推薦雞白湯拉麵。", map: "Ginza Kagari Main Branch" },
+          { id: "d3_3", time: "14:30", type: "spot", label: "必逛景點", title: "銀座歩行者天國 ＆ 麻布台之丘", desc: "逛逛旗艦店與文具伊東屋，下午前往麻布台之丘近距離拍東京鐵塔。", map: "Azabudai Hills" },
+          { id: "d3_4", time: "19:00", type: "food", label: "晚餐", title: "六本木 燒肉叙々苑 / 居酒屋", desc: "一邊欣賞東京鐵塔點燈夜色，一邊大口吃頂級燒肉。", map: "Jojoen Roppongi" }
+        ]
+      },
+      {
+        id: "day4",
+        title: "7/4 (六) 迪士尼夢幻一整天（陸地/海洋）",
+        hotel: "舞濱/新浦安度假飯店 (或續住市區)",
+        hotelMap: "Tokyo Disneyland",
+        items: [
+          { id: "d4_1", time: "08:30", type: "spot", label: "必逛景點", title: "東京迪士尼樂園 / 迪士尼海洋", desc: "一早衝熱門設施！購買 DPA 快速通關，體驗七月限定夏日潑水活動。", map: "Tokyo Disney Resort" },
+          { id: "d4_2", time: "12:30", type: "food", label: "午餐", title: "園區主題餐廳（紅心女王宴會大廳）", desc: "造型可愛的迪士尼限定餐點與消暑冰淇淋。", map: "Queen of Hearts Banquet Hall" },
+          { id: "d4_3", time: "18:30", type: "food", label: "晚餐", title: "伊克斯皮兒莉 (IKSPIARI) 美食街", desc: "園區旁購物中心享用和風洋食或拉麵，避開散場人潮。", map: "IKSPIARI" },
+          { id: "d4_4", time: "20:30", type: "spot", label: "必逛景點", title: "迪士尼夜間城堡燈光煙火秀", desc: "在夏夜星空下欣賞最感動的煙火與花車大遊行。", map: "Cinderella Castle Tokyo Disneyland" }
+        ]
+      },
+      {
+        id: "day5",
+        title: "7/5 (日) 川越小江戶穿越・新宿夜未眠",
+        hotel: "新宿/上野精選飯店 (最後一晚住宿)",
+        hotelMap: "Shinjuku Station",
+        items: [
+          { id: "d5_1", time: "09:30", type: "spot", label: "必逛景點", title: "川越冰川神社（七月風鈴祭🎐）", desc: "7月限定「結緣風鈴」隧道清脆響亮，穿浴衣拍照超級夢幻！", map: "Kawagoe Hikawa Shrine" },
+          { id: "d5_2", time: "12:30", type: "food", label: "午餐", title: "川越 小川菊 百年鰻魚飯", desc: "藏造老街必吃炭烤蒲燒鰻魚，搭配地瓜甜點與COEDO啤酒。", map: "Ogakiku Kawagoe" },
+          { id: "d5_3", time: "16:00", type: "spot", label: "必逛景點", title: "新宿 歌舞伎町 ＆ 3D巨型三花貓", desc: "藥妝店、電器與伴手禮最後大採購。", map: "Cross Shinjuku Vision" },
+          { id: "d5_4", time: "19:30", type: "food", label: "晚餐", title: "新宿 思出橫丁 串燒居酒屋", desc: "在充滿昭和懷舊氛圍的燈籠小巷乾杯慶祝！", map: "Omoide Yokocho" }
+        ]
+      },
+      {
+        id: "day6",
+        title: "7/6 (一) 上野公園藝文・滿載而歸返台",
+        hotel: "溫暖的家（晚班機返台）",
+        hotelMap: "Ueno Station",
+        items: [
+          { id: "d6_1", time: "09:30", type: "spot", label: "必逛景點", title: "上野恩賜公園 ＆ 不忍池荷花", desc: "七月正值不忍池荷花盛開，散步感受東京最後的悠閒早晨。", map: "Ueno Onshi Park" },
+          { id: "d6_2", time: "12:00", type: "food", label: "午餐", title: "上野 伊豆榮 鰻魚飯 / 鴨to蔥拉麵", desc: "在阿美橫丁周邊享用最後一頓道地日式午餐。", map: "Ramen Kamo to Negi" },
+          { id: "d6_3", time: "14:00", type: "spot", label: "必逛景點", title: "阿美橫丁 ＆ 二木菓子最後補貨", desc: "把剩餘日幣零錢花光，採購零食伴手禮。", map: "Ameyoko Shopping District" },
+          { id: "d6_4", time: "19:30", type: "flight", label: "晚班機返台", title: "前往機場搭機返回台灣", desc: "帶著滿滿的照片與戰利品平安回家！", map: "Narita International Airport" }
+        ]
+      }
+    ];
+
+    let checkedState = {};
+
+    function renderDays() {
+      const wrapper = document.getElementById("daysWrapper");
+      wrapper.innerHTML = itineraryData.map((day, idx) => `
+        <section id="${day.id}" class="day-section ${idx === 0 ? 'active' : ''}">
+          <div class="day-header-card">
+            <div class="day-title-row">
+              <h2 class="day-title">${day.title}</h2>
+              <span id="prog_text_${day.id}" style="font-size:0.85rem;font-weight:700;color:var(--vermilion);">0 / ${day.items.length} 完成</span>
+            </div>
+            <div class="hotel-tag">
+              <span>🏨 ${day.hotel}</span>
+              <a class="btn-nav" style="padding:3px 8px;font-size:0.78rem;" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(day.hotelMap)}">導航</a>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="prog_bar_${day.id}"></div>
+            </div>
+          </div>
+
+          ${day.items.map(item => `
+            <div class="item-card" id="card_${item.id}">
+              <div class="stamp-badge">達成 ✅</div>
+              <div class="item-content">
+                <div class="item-top">
+                  <span class="time-pill">${item.time}</span>
+                  <span class="type-pill type-${item.type}">${item.label}</span>
+                </div>
+                <div class="item-title">${item.title}</div>
+                <div class="item-desc">${item.desc}</div>
+                <div class="item-actions">
+                  <a class="btn-nav" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.map)}">📍 Google Maps 導航</a>
+                  <button class="btn-check" id="btn_${item.id}" onclick="toggleCheck('${day.id}', '${item.id}')">已打卡 ✅</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+
+          <div class="album-box">
+            <div class="album-header">
+              <h3>📸 ${day.id.toUpperCase()} 回憶相簿（全員共享）</h3>
+              <label class="upload-label">
+                ＋ 上傳照片
+                <input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(event, '${day.id}')" />
+              </label>
+            </div>
+            <div class="photo-grid" id="photos_${day.id}">
+              <p style="font-size:0.82rem;color:var(--text-muted);grid-column:1/-1;">尚無照片，點擊右上角上傳今天拍的美照吧！</p>
+            </div>
+          </div>
+        </section>
+      `).join('');
+    }
+
+    renderDays();
+
+    window.switchTab = function(tabId, e) {
+      document.querySelectorAll('.day-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if (e && e.target) e.target.classList.add('active');
+    };
+
+    const checkDocRef = doc(db, "tokyo2026", "checkins");
+    onSnapshot(checkDocRef, (snapshot) => {
+      document.getElementById("syncText").innerText = "雲端已即時同步・旅伴共享中";
+      checkedState = snapshot.exists() ? snapshot.data() : {};
+      updateAllCheckUI();
+    }, (error) => {
+      document.getElementById("syncDot").style.background = "#F87171";
+      document.getElementById("syncText").innerText = "連線異常，請檢查網路或資料庫規則";
+      console.error(error);
+    });
+
+    function updateAllCheckUI() {
+      itineraryData.forEach(day => {
+        let doneCount = 0;
+        day.items.forEach(item => {
+          const isChecked = !!checkedState[item.id];
+          const card = document.getElementById(`card_${item.id}`);
+          const btn = document.getElementById(`btn_${item.id}`);
+          if (isChecked) {
+            doneCount++;
+            card.classList.add("checked");
+            btn.innerText = "取消打卡";
+          } else {
+            card.classList.remove("checked");
+            btn.innerText = "已打卡 ✅";
+          }
+        });
+        document.getElementById(`prog_text_${day.id}`).innerText = `${doneCount} / ${day.items.length} 完成`;
+        document.getElementById(`prog_bar_${day.id}`).style.width = `${(doneCount / day.items.length) * 100}%`;
+      });
+    }
+
+    window.toggleCheck = async function(dayId, itemId) {
+      const nextVal = !checkedState[itemId];
+      checkedState[itemId] = nextVal;
+      updateAllCheckUI();
+
+      if (nextVal) {
+        const dayObj = itineraryData.find(d => d.id === dayId);
+        const allDone = dayObj.items.every(i => !!checkedState[i.id]);
+        if (allDone) {
+          launchFireworks();
+        }
+      }
+
+      await setDoc(checkDocRef, { [itemId]: nextVal }, { merge: true });
+    };
+
+    const expensesCol = collection(db, "tokyo2026_expenses");
+    const qExp = query(expensesCol, orderBy("createdAt", "desc"));
+
+    onSnapshot(qExp, (snapshot) => {
+      const list = document.getElementById("expenseList");
+      let totalJpy = 0;
+      let html = "";
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const amt = Number(data.amount) || 0;
+        totalJpy += amt;
+        html += `
+          <li class="expense-row">
+            <div class="expense-info">
+              <strong>${data.title}</strong>
+              <small>${data.day} ｜ 付款人：${data.payer || '旅伴'}</small>
+            </div>
+            <div class="expense-amount">
+              <strong>¥${amt.toLocaleString()}</strong><br/>
+              <small style="color:#888;">約 NT$${Math.round(amt * 0.215).toLocaleString()}</small>
+              <button onclick="deleteExpense('${docSnap.id}')" style="margin-left:8px;border:none;background:none;color:#AAA;cursor:pointer;">✕</button>
+            </div>
+          </li>
+        `;
+      });
+      list.innerHTML = html || `<p style="text-align:center;color:var(--text-muted);padding:20px;">目前還沒有記帳紀錄，快來記下第一筆吧！</p>`;
+      document.getElementById("totalJpy").innerText = `¥${totalJpy.toLocaleString()}`;
+      document.getElementById("totalTwd").innerText = `NT$${Math.round(totalJpy * 0.215).toLocaleString()}`;
+    });
+
+    window.addExpense = async function() {
+      const day = document.getElementById("expDay").value;
+      const payer = document.getElementById("expPayer").value.trim() || "旅伴";
+      const title = document.getElementById("expTitle").value.trim();
+      const amount = Number(document.getElementById("expAmount").value);
+
+      if (!title || !amount) {
+        alert("請輸入消費項目與日幣金額喔！");
+        return;
+      }
+
+      document.getElementById("expTitle").value = "";
+      document.getElementById("expAmount").value = "";
+
+      await addDoc(expensesCol, {
+        day, payer, title, amount, createdAt: Date.now()
+      });
+    };
+
+    window.deleteExpense = async function(id) {
+      if (confirm("確定要刪除這筆帳目嗎？")) {
+        await deleteDoc(doc(db, "tokyo2026_expenses", id));
+      }
+    };
+
+    const photosCol = collection(db, "tokyo2026_photos");
+    onSnapshot(query(photosCol, orderBy("createdAt", "desc")), (snapshot) => {
+      const grouped = { day1: [], day2: [], day3: [], day4: [], day5: [], day6: [] };
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        if (grouped[d.dayId]) {
+          grouped[d.dayId].push({ id: docSnap.id, ...d });
+        }
+      });
+
+      Object.keys(grouped).forEach(dayId => {
+        const grid = document.getElementById(`photos_${dayId}`);
+        if (!grid) return;
+        if (grouped[dayId].length === 0) {
+          grid.innerHTML = `<p style="font-size:0.82rem;color:var(--text-muted);grid-column:1/-1;">尚無照片，點擊右上角上傳今天拍的美照吧！</p>`;
+        } else {
+          grid.innerHTML = grouped[dayId].map(p => `
+            <div class="photo-item">
+              <img src="${p.imgData}" onclick="openModal('${p.imgData}')" alt="回憶照片" />
+              <button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button>
+            </div>
+          `).join('');
+        }
+      });
+    });
+
+    window.uploadPhoto = function(event, dayId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = async function() {
+          const canvas = document.createElement("canvas");
+          const maxW = 720;
+          const scale = Math.min(1, maxW / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.72);
+
+          await addDoc(photosCol, {
+            dayId,
+            imgData: compressedBase64,
+            createdAt: Date.now()
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.deletePhoto = async function(id) {
+      if (confirm("要刪除這張回憶照片嗎？")) {
+        await deleteDoc(doc(db, "tokyo2026_photos", id));
+      }
+    };
+
+    window.openModal = function(src) {
+      document.getElementById("modalImg").src = src;
+      document.getElementById("imgModal").style.display = "flex";
+    };
+
+    function launchFireworks() {
+      const canvas = document.getElementById("fireworksCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#FF924C", "#FFD166"];
+
+      function createBurst(x, y) {
+        for (let i = 0; i < 65; i++) {
+          const angle = (Math.PI * 2 * i) / 65;
+          const speed = Math.random() * 5 + 2;
+          particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            alpha: 1,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      }
+
+      createBurst(canvas.width * 0.3, canvas.height * 0.35);
+      setTimeout(() => createBurst(canvas.width * 0.7, canvas.height * 0.3), 300);
+      setTimeout(() => createBurst(canvas.width * 0.5, canvas.height * 0.45), 600);
+
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, index) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.06;
+          p.alpha -= 0.015;
+          if (p.alpha <= 0) {
+            particles.splice(index, 1);
+          } else {
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+        frame++;
+        if (particles.length > 0 && frame < 150) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
